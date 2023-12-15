@@ -9,40 +9,40 @@
 
 ssize_t print_custom_str(char *str)
 {
-    ssize_t num, len;
+	ssize_t num, len;
 
-    num = custom_str_len(str);
-    len = write(STDOUT_FILENO, str, num);
-    if (len != num)
-    {
-        perror("Fatal Error");
-        return -1;
-    }
-    return len;
+	num = custom_str_len(str);
+	len = write(STDOUT_FILENO, str, num);
+	if (len != num)
+	{
+		perror("Fatal Error");
+		(return) -1;
+	}
+	(return) len;
 }
 
 /**
  * dup_custom_str - returns a pointer to new memory
  * allocation containing a copy
- * @str_to_duplicate: string to be duplicated
+ * @str_to_dup: string to be duplicated
  * Return: a pointer to the new duplicated string
  */
 char *dup_custom_str(char *str_to_dup)
 {
-    char *copy;
-    int len, x;
+	char *copy;
+	int len, x;
 
-    if (str_to_dup == NULL)
-        return NULL;
+	if (str_to_dup == NULL)
+		(return) NULL;
 
-    for (len = 0; str_to_dup[len]; len++)
-        ;
-    copy = malloc((len + 1) * sizeof(char));
+	for (len = 0; str_to_dup[len]; len++)
+		;
+	copy = malloc((len + 1) * sizeof(char));
 
-    for (x = 0; x <= len; x++)
-        copy[x] = str_to_dup[x];
+	for (x = 0; x <= len; x++)
+		copy[x] = str_to_dup[x];
 
-    return copy;
+	(return) copy;
 }
 
 /**
@@ -53,16 +53,16 @@ char *dup_custom_str(char *str_to_dup)
  */
 int compare_custom_str(char *str1, char *str2)
 {
-    int x;
+	int x;
 
-    x = 0;
-    while (str1[x] == str2[x])
-    {
-        if (str1[x] == '\0')
-            return 0;
-        x++;
-    }
-    return str1[x] - str2[x];
+	x = 0;
+	while (str1[x] == str2[x])
+	{
+		if (str1[x] == '\0')
+			(return) 0;
+		x++;
+	}
+	(return) str1[x] - str2[x];
 }
 
 /**
@@ -73,28 +73,28 @@ int compare_custom_str(char *str1, char *str2)
  */
 char *cat_custom_str(char *str1, char *str2)
 {
-    char *new_str;
-    unsigned int len1, len2, new_len, x, y;
+	char *new_str;
+	unsigned int len1, len2, new_len, x, y;
 
-    len1 = str1 ? custom_str_len(str1) : 0;
-    len2 = str2 ? custom_str_len(str2) : 0;
+	len1 = str1 ? custom_str_len(str1) : 0;
+	len2 = str2 ? custom_str_len(str2) : 0;
 
-    new_len = len1 + len2 + 2;
-    new_str = malloc(new_len * sizeof(char));
+	new_len = len1 + len2 + 2;
+	new_str = malloc(new_len * sizeof(char));
 
-    if (new_str == NULL)
-        return NULL;
+	if (new_str == NULL)
+		(return) NULL;
 
-    for (x = 0; x < len1; x++)
-        new_str[x] = str1[x];
+	for (x = 0; x < len1; x++)
+		new_str[x] = str1[x];
 
-    new_str[x] = '/';
-    
-    for (y = 0; y < len2; y++)
-        new_str[x + 1 + y] = str2[y];
+	new_str[x] = '/';
 
-    new_str[len1 + len2 + 1] = '\0';
-    return new_str;
+	for (y = 0; y < len2; y++)
+		new_str[x + 1 + y] = str2[y];
+
+	new_str[len1 + len2 + 1] = '\0';
+	(return) new_str;
 }
 
 /**
@@ -104,12 +104,12 @@ char *cat_custom_str(char *str1, char *str2)
  */
 unsigned int custom_str_len(char *str)
 {
-    unsigned int len;
+	unsigned int len;
 
-    len = 0;
+	len = 0;
 
-    for (len = 0; str[len]; len++)
-        ;
-    return len;
+	for (len = 0; str[len]; len++)
+		;
+	(return) len;
 }
 

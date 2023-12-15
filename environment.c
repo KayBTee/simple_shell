@@ -8,26 +8,26 @@
  */
 char **cse(char **ev)
 {
-    char **n = NULL;
-    size_t x;
+	char **n = NULL;
+	size_t x;
 
-    for (x = 0; ev[x] != NULL; x++)
-        ;
+	for (x = 0; ev[x] != NULL; x++)
+		;
 
-    n = malloc(sizeof(char *) * (x + 1));
+	n = malloc(sizeof(char *) * (x + 1));
 
-    if (n == NULL)
-    {
-        perror("Fatal Error");
-        ex(1);
-    }
+	if (n == NULL)
+	{
+		perror("Fatal Error");
+		ex(1);
+	}
 
-    for (x = 0; ev[x] != NULL; x++)
-        n[x] = dcs(ev[x]);
+	for (x = 0; ev[x] != NULL; x++)
+		n[x] = dcs(ev[x]);
 
-    n[x] = NULL;
+	n[x] = NULL;
 
-    return (n);
+	return (n);
 }
 
 /**
@@ -36,15 +36,15 @@ char **cse(char **ev)
  */
 void dse(char **ev)
 {
-    unsigned int x;
+	unsigned int x;
 
-    x = 0;
+	x = 0;
 
-    while (ev[x] != NULL)
-    {
-        free(ev[x]);
-        x++;
-    }
+	while (ev[x] != NULL)
+	{
+		free(ev[x]);
+		x++;
+	}
 
-    free(ev);
+	free(ev);
 }

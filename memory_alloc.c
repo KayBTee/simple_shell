@@ -9,24 +9,24 @@
  */
 char **rcp(char **p, size_t *s)
 {
-    char **np;
-    size_t x;
+	char **np;
+	size_t x;
 
-    np = malloc(sizeof(char *) * ((*s) + 10));
+	np = malloc(sizeof(char *) * ((*s) + 10));
 
-    if (np == NULL)
-    {
-        free(p);
-        return (NULL);
-    }
+	if (np == NULL)
+	{
+		free(p);
+		return (NULL);
+	}
 
-    for (x = 0; x < (*s); x++)
-    {
-        np[x] = p[x];
-    }
+	for (x = 0; x < (*s); x++)
+	{
+		np[x] = p[x];
+	}
 
-    *s += 10;
-    free(p);
+	*s += 10;
+	free(p);
 
-    return (np);
+	return (np);
 }

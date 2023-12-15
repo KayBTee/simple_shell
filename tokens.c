@@ -9,35 +9,35 @@
  */
 char **tokenize_command(char *cmd_buffer, char *delimeter)
 {
-    char **tokens = NULL;
-    size_t x = 0, mcount = 10;
+	char **tokens = NULL;
+	size_t x = 0, mcount = 10;
 
-    if (cmd_buffer == NULL)
-        return NULL;
+	if (cmd_buffer == NULL)
+		(return) NULL;
 
-    tokens = malloc(sizeof(char *) * mcount);
+	tokens = malloc(sizeof(char *) * mcount);
 
-    if (tokens == NULL)
-    {
-        perror("Fatal Error");
-        return NULL;
-    }
+	if (tokens == NULL)
+	{
+		perror("Fatal Error");
+		(return) NULL;
+	}
 
-    while ((tokens[x] = custom_strtok_r(cmd_buffer, delimeter)) != NULL)
-    {
-        x++;
-        if (x == mcount)
-        {
-            tokens = realloc_custom_pointer(tokens, &mcount);
+	while ((tokens[x] = custom_strtok_r(cmd_buffer, delimeter)) != NULL)
+	{
+		x++;
+		if (x == mcount)
+		{
+			tokens = realloc_custom_pointer(tokens, &mcount);
 
-            if (tokens == NULL)
-            {
-                perror("Fatal Error");
-                return NULL;
-            }
-        }
-        cmd_buffer = NULL;
-    }
+			if (tokens == NULL)
+			{
+				perror("Fatal Error");
+				(return) NULL;
+			}
+		}
+		cmd_buffer = NULL;
+	}
 
-    return tokens;
+	(return) tokens;
 }

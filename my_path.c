@@ -8,22 +8,22 @@
  */
 char *fep(char **ev)
 {
-    char *p = "PATH=";
-    unsigned int x, y;
+	char *p = "PATH=";
+	unsigned int x, y;
 
-    for (x = 0; ev[x] != NULL; x++)
-    {
-        for (y = 0; p[y] != '\0'; y++)
-        {
-            if (p[y] != ev[x][y])
-                break;
-        }
+	for (x = 0; ev[x] != NULL; x++)
+	{
+		for (y = 0; p[y] != '\0'; y++)
+		{
+			if (p[y] != ev[x][y])
+				break;
+		}
 
-        if (p[y] == '\0')
-            break;
-    }
+		if (p[y] == '\0')
+			break;
+	}
 
-    return (ev[x]);
+	return (ev[x]);
 }
 
 /**
@@ -35,42 +35,42 @@ char *fep(char **ev)
  */
 int esc(char *cmd, shell_info_t *info)
 {
-    pid_t cp;
+	pid_t cp;
 
-    if (access(cmd, X_OK) == 0)
-    {
-        cp = fork();
+	if (access(cmd, X_OK) == 0)
+	{
+		cp = fork();
 
-        if (cp == -1)
-            print_custom_error(info, NULL);
+		if (cp == -1)
+			print_custom_error(info, NULL);
 
-        if (cp == 0)
-        {
-            if (execve(cmd, info->args, info->env_vars) == -1)
-                print_custom_error(info, NULL);
-        }
-        else
-        {
-            wait(&info->exit_code);
+		if (cp == 0)
+		{
+			if (execve(cmd, info->args, info->env_vars) == -1)
+				print_custom_error(info, NULL);
+		}
+		else
+		{
+			wait(&info->exit_code);
 
-            if (WIFEXITED(info->exit_code))
-                info->exit_code = WEXITSTATUS(info->exit_code);
-            else if (WIFSIGNALED(info->exit_code) && WTERMSIG(info->exit_code) == SIGINT)
-                info->exit_code = 130;
+			if (WIFEXITED(info->exit_code))
+				info->exit_code = WEXITSTATUS(info->exit_code);
+			else if (WIFSIGNALED(info->exit_code) && WTERMSIG(info->exit_code) == SIGINT)
+				info->exit_code = 130;
 
-            return (0);
-        }
+			return (0);
+		}
 
-        info->exit_code = 127;
-        return (1);
-    }
-    else
-    {
-        print_custom_error(info, ": permission denied\n");
-        info->exit_code = 126;
-    }
+		info->exit_code = 127;
+		return (1);
+	}
+	else
+	{
+		print_custom_error(info, ": permission denied\n");
+		info->exit_code = 126;
+	}
 
-    return (0);
+	return (0);
 }
 
 /**
@@ -81,55 +81,55 @@ int esc(char *cmd, shell_info_t *info)
  */
 void cep(shell_info_t *info)
 {
-    char *p, *pd = NULL, *c = NULL;
-    unsigned int x = 0, n = 0;
-    char **pt;
-    struct stat buf;
+	char *p, *pd = NULL, *c = NULL;
+	unsigned int x = 0, n = 0;
+	char **pt;
+	struct stat buf;
 
-    if (cd(info->args[0]))
-        n = ecd(info);
+	if (cd(info->args[0]))
+		n = ecd(info);
 
-    else
-    {
-        p = fep(info->env_vars);
+	else
+	{
+		p = fep(info->env_vars);
 
-        if (p != NULL)
-        {
-            pd = dup_custom_string(p + 5);
-            pt = tcmd(pd, ":");
+		if (p != NULL)
+		{
+			pd = dup_custom_string(p + 5);
+			pt = tcmd(pd, ":");
 
-            for (x = 0; pt && pt[x]; x++, free(c))
-            {
-                c = cat_custom_strings(pt[x], info->args[0]);
+			for (x = 0; pt && pt[x]; x++, free(c))
+			{
+				c = cat_custom_strings(pt[x], info->args[0]);
 
-                if (stat(c, &buf) == 0)
-                {
-                    n = esc(c, info);
-                    free(c);
-                    break;
-                }
-            }
+				if (stat(c, &buf) == 0)
+				{
+					n = esc(c, info);
+					free(c);
+					break;
+				}
+			}
 
-            free(pd);
+			free(pd);
 
-            if (pt == NULL)
-            {
-                info->exit_code = 127;
-                exs(info);
-            }
-        }
+			if (pt == NULL)
+			{
+				info->exit_code = 127;
+				exs(info);
+			}
+		}
 
-        if (p == NULL || pt[x] == NULL)
-        {
-            print_custom_error(info, ": not found\n");
-            info->exit_code = 127;
-        }
+		if (p == NULL || pt[x] == NULL)
+		{
+			print_custom_error(info, ": not found\n");
+			info->exit_code = 127;
+		}
 
-        free(pt);
-    }
+		free(pt);
+	}
 
-    if (n == 1)
-        exs(info);
+	if (n == 1)
+		exs(info);
 }
 
 /**
@@ -140,51 +140,51 @@ void cep(shell_info_t *info)
  */
 int ecd(shell_info_t *info)
 {
-    pid_t cp;
-    struct stat buf;
+	pid_t cp;
+	struct stat buf;
 
-    if (stat(info->args[0], &buf) == 0)
-    {
-        if (access(info->args[0], X_OK) == 0)
-        {
-            cp = fork();
+	if (stat(info->args[0], &buf) == 0)
+	{
+		if (access(info->args[0], X_OK) == 0)
+		{
+			cp = fork();
 
-            if (cp == -1)
-                print_custom_error(info, NULL);
+			if (cp == -1)
+				print_custom_error(info, NULL);
 
-            if (cp == 0)
-            {
-                if (execve(info->args[0], info->args, info->env_vars) == -1)
-                    print_custom_error(info, NULL);
-            }
-            else
-            {
-                wait(&info->exit_code);
+			if (cp == 0)
+			{
+				if (execve(info->args[0], info->args, info->env_vars) == -1)
+					print_custom_error(info, NULL);
+			}
+			else
+			{
+				wait(&info->exit_code);
 
-                if (WIFEXITED(info->exit_code))
-                    info->exit_code = WEXITSTATUS(info->exit_code);
-                else if (WIFSIGNALED(info->exit_code) && WTERMSIG(info->exit_code) == SIGINT)
-                    info->exit_code = 130;
+				if (WIFEXITED(info->exit_code))
+					info->exit_code = WEXITSTATUS(info->exit_code);
+				else if (WIFSIGNALED(info->exit_code) && WTERMSIG(info->exit_code) == SIGINT)
+					info->exit_code = 130;
 
-                return (0);
-            }
+				return (0);
+			}
 
-            info->exit_code = 127;
-            return (1);
-        }
-        else
-        {
-            print_custom_error(info, ": permission denied\n");
-            info->exit_code = 126;
-        }
+			info->exit_code = 127;
+			return (1);
+		}
+		else
+		{
+			print_custom_error(info, ": permission denied\n");
+			info->exit_code = 126;
+		}
 
-        return (0);
-    }
+		return (0);
+	}
 
-    print_custom_error(info, ": not found\n");
-    info->exit_code = 127;
+	print_custom_error(info, ": not found\n");
+	info->exit_code = 127;
 
-    return (0);
+	return (0);
 }
 
 /**
@@ -195,19 +195,19 @@ int ecd(shell_info_t *info)
  */
 int cde(char *p)
 {
-    unsigned int x;
+	unsigned int x;
 
-    x = 0;
+	x = 0;
 
-    while (p[x])
-    {
-        if (p[x] == '/')
-        {
-            return (1);
-        }
+	while (p[x])
+	{
+		if (p[x] == '/')
+		{
+			return (1);
+		}
 
-        x++;
-    }
+		x++;
+	}
 
-    return (0);
+	return (0);
 }

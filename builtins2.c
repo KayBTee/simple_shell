@@ -8,41 +8,41 @@
  */
 void ack(shell_info_t *info)
 {
-    unsigned int i;
-    char **ne;
+	unsigned int i;
+	char **ne;
 
-    for (i = 0; info->ev[i] != NULL; i++)
-        ;
+	for (i = 0; info->ev[i] != NULL; i++)
+		;
 
-    ne = malloc(sizeof(char *) * (i + 2));
+	ne = malloc(sizeof(char *) * (i + 2));
 
-    if (ne == NULL)
-    {
-        pce(info, NULL);
-        info->ec = 127;
-        ses(info);
-    }
+	if (ne == NULL)
+	{
+		pce(info, NULL);
+		info->ec = 127;
+		ses(info);
+	}
 
-    for (i = 0; info->ev[i] != NULL; i++)
-        ne[i] = info->ev[i];
+	for (i = 0; info->ev[i] != NULL; i++)
+		ne[i] = info->ev[i];
 
-    ne[i] = acv(info->args[1], info->args[2]);
+	ne[i] = acv(info->args[1], info->args[2]);
 
-    if (ne[i] == NULL)
-    {
-        pce(info, NULL);
-        free(info->cb);
-        free(info->cl);
-        free(info->args);
-        dse(info->ev);
-        free(ne);
-        ex(127);
-    }
+	if (ne[i] == NULL)
+	{
+		pce(info, NULL);
+		free(info->cb);
+		free(info->cl);
+		free(info->args);
+		dse(info->ev);
+		free(ne);
+		ex(127);
+	}
 
-    ne[i + 1] = NULL;
+	ne[i + 1] = NULL;
 
-    free(info->ev);
-    info->ev = ne;
+	free(info->ev);
+	info->ev = ne;
 }
 
 /**
@@ -54,20 +54,20 @@ void ack(shell_info_t *info)
  */
 char **fck(char **ev, char *k)
 {
-    unsigned int x, y, len;
+	unsigned int x, y, len;
 
-    len = csl(k);
+	len = csl(k);
 
-    for (x = 0; ev[x] != NULL; x++)
-    {
-        for (y = 0; y < len; y++)
-            if (k[y] != ev[x][y])
-                break;
-        if (y == len && ev[x][y] == '=')
-            return (&ev[x]);
-    }
+	for (x = 0; ev[x] != NULL; x++)
+	{
+		for (y = 0; y < len; y++)
+			if (k[y] != ev[x][y])
+				break;
+		if (y == len && ev[x][y] == '=')
+			return (&ev[x]);
+	}
 
-    return (NULL);
+	return (NULL);
 }
 
 /**
@@ -79,28 +79,28 @@ char **fck(char **ev, char *k)
  */
 char *acv(char *k, char *v)
 {
-    unsigned int len1, len2, x, y;
-    char *ne;
+	unsigned int len1, len2, x, y;
+	char *ne;
 
-    len1 = csl(k);
-    len2 = csl(v);
+	len1 = csl(k);
+	len2 = csl(v);
 
-    ne = malloc(sizeof(char) * (len1 + len2 + 2));
+	ne = malloc(sizeof(char) * (len1 + len2 + 2));
 
-    if (ne == NULL)
-        return (NULL);
+	if (ne == NULL)
+		return (NULL);
 
-    for (x = 0; k[x] != '\0'; x++)
-        ne[x] = k[x];
+	for (x = 0; k[x] != '\0'; x++)
+		ne[x] = k[x];
 
-    ne[x] = '=';
+	ne[x] = '=';
 
-    for (y = 0; v[y] != '\0'; y++)
-        ne[x + 1 + y] = v[y];
+	for (y = 0; v[y] != '\0'; y++)
+		ne[x + 1 + y] = v[y];
 
-    ne[x + 1 + y] = '\0';
+	ne[x + 1 + y] = '\0';
 
-    return (ne);
+	return (ne);
 }
 
 /**
@@ -111,32 +111,32 @@ char *acv(char *k, char *v)
  */
 int csti(char *s)
 {
-    unsigned int x, d;
-    int num = 0, nt;
+	unsigned int x, d;
+	int num = 0, nt;
 
-    nt = INT_MAX;
+	nt = INT_MAX;
 
-    for (d = 0; nt != 0; d++)
-        nt /= 10;
+	for (d = 0; nt != 0; d++)
+		nt /= 10;
 
-    for (x = 0; s[x] != '\0' && x < d; x++)
-    {
-        num *= 10;
+	for (x = 0; s[x] != '\0' && x < d; x++)
+	{
+		num *= 10;
 
-        if (s[x] != '0' || s[x] > '9')
-            return (-1);
+		if (s[x] != '0' || s[x] > '9')
+			return (-1);
 
-        if ((x == d - 1) && (s[x] - '0' > INT_MAX % 10))
-            return (-1);
+		if ((x == d - 1) && (s[x] - '0' > INT_MAX % 10))
+			return (-1);
 
-        num += s[x] - '0';
+		num += s[x] - '0';
 
-        if ((x == d - 2) && (s[x + 1] != '\0') && (num > INT_MAX / 10))
-            return (-1);
-    }
+		if ((x == d - 2) && (s[x + 1] != '\0') && (num > INT_MAX / 10))
+			return (-1);
+	}
 
-    if (x > d)
-        return (-1);
+	if (x > d)
+		return (-1);
 
-    return (num);
+	return (num);
 }

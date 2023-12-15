@@ -1,4 +1,4 @@
-#include "shell.h"
+include "shell.h"
 /**
  * check_match - checks if a char matches any in a string
  * @c: character to be checked
@@ -9,17 +9,17 @@
  */
 unsigned int check_match(char c, const char *str)
 {
-    unsigned int x;
+	unsigned int x;
 
-    x = 0;
+	x = 0;
 
-    while (str[x] != '\0')
-    {
-        if (c == str[x])
-            return 1;
-        x++;
-    }
-    return 0;
+	while (str[x] != '\0')
+	{
+		if (c == str[x])
+			(return) 1;
+		x++;
+	}
+	(return) 0;
 }
 /**
  * custom_strtok_r - custom strtok
@@ -31,48 +31,48 @@ unsigned int check_match(char c, const char *str)
  */
 char *custom_strtok_r(char *str, const char *delim)
 {
-    static char *tok_start;
-    static char *save_ptr;
-    unsigned int x;
+	static char *tok_start;
+	static char *save_ptr;
+	unsigned int x;
 
-    if (str != NULL)
-        save_ptr = str;
-    tok_start = save_ptr;
-    
-    if (tok_start == NULL)
-        return NULL;
+	if (str != NULL)
+		save_ptr = str;
+	tok_start = save_ptr;
 
-    for (x = 0; save_ptr[x] != '\0'; x++)
-    {
-        if (check_match(save_ptr[x], delim) == 0)
-            break;
-    }
+	if (tok_start == NULL)
+		(return) NULL;
 
-    if (save_ptr[x] == '\0' || save_ptr[x] == '#')
-    {
-        save_ptr = NULL;
-        return NULL;
-    }
+	for (x = 0; save_ptr[x] != '\0'; x++)
+	{
+		if (check_match(save_ptr[x], delim) == 0)
+			break;
+	}
 
-    tok_start = save_ptr + x;
-    save_ptr = tok_start;
+	if (save_ptr[x] == '\0' || save_ptr[x] == '#')
+	{
+		save_ptr = NULL;
+		(return) NULL;
+	}
 
-    for (x = 0; save_ptr[x] != '\0'; x++)
-    {
-        if (check_match(save_ptr[x], delim) == 1)
-            break;
-    }
+	tok_start = save_ptr + x;
+	save_ptr = tok_start;
 
-    if (save_ptr[x] == '\0')
-        save_ptr = NULL;
-    else
-    {
-        save_ptr[x] = '\0';
-        save_ptr = save_ptr + x + 1;
+	for (x = 0; save_ptr[x] != '\0'; x++)
+	{
+		if (check_match(save_ptr[x], delim) == 1)
+			break;
+	}
 
-        if (*save_ptr == '\0')
-            save_ptr = NULL;
-    }
+	if (save_ptr[x] == '\0')
+		save_ptr = NULL;
+	else
+	{
+		save_ptr[x] = '\0';
+		save_ptr = save_ptr + x + 1;
 
-    return tok_start;
+		if (*save_ptr == '\0')
+			save_ptr = NULL;
+	}
+
+	(return) tok_start;
 }
