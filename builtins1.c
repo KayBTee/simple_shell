@@ -15,18 +15,15 @@ void (*sib(shell_info_t *info))(shell_info_t *info)
 		{"unsetenv", ssseu},
 		{NULL, NULL}
 	};
-
 	for (i = 0; sb[i].func != NULL; i++)
 	{
 		if (compare_custom_str(info->args[0], sb[i].name) == 0)
 			break;
 	}
-
 	if (sb[i].func != NULL)
 		sb[i].func(info);
 	return (sb[i].func);
 }
-
 /**
  * ses - exits shell
  * @info: shell info
@@ -50,14 +47,12 @@ void ses(shell_info_t *info)
 		}
 		info->exit_code = s;
 	}
-
 	free(info->cmd_buf);
 	free(info->args);
 	free(info->cmd_list);
 	dse(info->env_vars);
 	exit(info->exit_code);
 }
-
 /**
  * ssse - print shell environment
  * @info: shell info
@@ -72,10 +67,8 @@ void ssse(shell_info_t *info)
 		print_custom_str("\n");
 		i++;
 	}
-
 	info->exit_code = 0;
 }
-
 /**
  * sssev - create new environment variable
  * @info: points to shell info
@@ -91,9 +84,7 @@ void sssev(shell_info_t *info)
 		info->exit_code = 2;
 		return;
 	}
-
 	k = fck(info->env_vars, info->args[1]);
-
 	if (k == NULL)
 	{
 		ack(info);
@@ -110,14 +101,11 @@ void sssev(shell_info_t *info)
 			dse(info->env_vars);
 			exit(127);
 		}
-
 		free(*k);
 		*k = v;
 	}
-
 	info->exit_code = 0;
 }
-
 /**
  * ssseu - removes env variable
  * @info: pointer to shell
@@ -125,7 +113,6 @@ void sssev(shell_info_t *info)
 void ssseu(shell_info_t *info)
 {
 	char **k, **ne;
-
 	unsigned int x, y;
 
 	if (info->args[1] == NULL)
@@ -134,35 +121,26 @@ void ssseu(shell_info_t *info)
 		info->exit_code = 2;
 		return;
 	}
-
 	k = fck(info->env_vars, info->args[1]);
-
 	if (k == NULL)
 	{
 		pce(info, ": No variable unset");
 		return;
 	}
-
 	for (x = 0; info->env_vars[x] != NULL; x++)
 		;
-
 	ne = malloc(sizeof(char *) * x);
-
 	if (ne == NULL)
 	{
 		pce(info, NULL);
 		info->exit_code = 127;
 		ses(info);
 	}
-
 	for (x = 0; info->env_vars[x] != *k; x++)
 		ne[x] = info->env_vars[x];
-
 	for (y = x + 1; info->env_vars[y] != NULL; y++, x++)
 		ne[x] = info->env_vars[y];
-
 	ne[x] = NULL;
-
 	free(*k);
 	free(info->env_vars);
 	info->env_vars = ne;

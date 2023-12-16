@@ -38,41 +38,33 @@ char *cstrtok_r(char *str, const char *delim)
 	if (str != NULL)
 		save_ptr = str;
 	tok_start = save_ptr;
-
 	if (tok_start == NULL)
 		return (NULL);
-
 	for (x = 0; save_ptr[x] != '\0'; x++)
 	{
 		if (check_match(save_ptr[x], delim) == 0)
 			break;
 	}
-
 	if (save_ptr[x] == '\0' || save_ptr[x] == '#')
 	{
 		save_ptr = NULL;
 		return (NULL);
 	}
-
 	tok_start = save_ptr + x;
 	save_ptr = tok_start;
-
 	for (x = 0; save_ptr[x] != '\0'; x++)
 	{
 		if (check_match(save_ptr[x], delim) == 1)
 			break;
 	}
-
 	if (save_ptr[x] == '\0')
 		save_ptr = NULL;
 	else
 	{
 		save_ptr[x] = '\0';
 		save_ptr = save_ptr + x + 1;
-
 		if (*save_ptr == '\0')
 			save_ptr = NULL;
 	}
-
 	return (tok_start);
 }

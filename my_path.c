@@ -1,5 +1,4 @@
 #include "shell.h"
-
 /**
  * fep - Gets PATH variables
  * @ev: Array of environment vars
@@ -18,14 +17,11 @@ char *fep(char **ev)
 			if (p[y] != ev[x][y])
 				break;
 		}
-
 		if (p[y] == '\0')
 			break;
 	}
-
 	return (ev[x]);
 }
-
 /**
  * esc - Executes command in the path
  * @cmd: Full path to command
@@ -40,10 +36,8 @@ int esc(char *cmd, shell_info_t *info)
 	if (access(cmd, X_OK) == 0)
 	{
 		cp = fork();
-
 		if (cp == -1)
 			pce(info, NULL);
-
 		if (cp == 0)
 		{
 			if (execve(cmd, info->args, info->env_vars) == -1)
@@ -52,16 +46,13 @@ int esc(char *cmd, shell_info_t *info)
 		else
 		{
 			wait(&info->exit_code);
-
 			if (WIFEXITED(info->exit_code))
 				info->exit_code = WEXITSTATUS(info->exit_code);
 			else if (WIFSIGNALED(info->exit_code) && WTERMSIG
 					(info->exit_code) == SIGINT)
 				info->exit_code = 130;
-
 			return (0);
 		}
-
 		info->exit_code = 127;
 		return (1);
 	}
@@ -70,10 +61,8 @@ int esc(char *cmd, shell_info_t *info)
 		pce(info, ": permission denied\n");
 		info->exit_code = 126;
 	}
-
 	return (0);
 }
-
 /**
  * cep - Checks if cmd is in PATH
  * @info: Pointer to struct of shell information
@@ -89,20 +78,16 @@ void cep(shell_info_t *info)
 
 	if (cde(info->args[0]))
 		n = ecd(info);
-
 	else
 	{
 		p = fep(info->env_vars);
-
 		if (p != NULL)
 		{
 			pd = dup_custom_str(p + 5);
 			pt = tokenize_command(pd, ":");
-
 			for (x = 0; pt && pt[x]; x++, free(c))
 			{
 				c = cat_custom_str(pt[x], info->args[0]);
-
 				if (stat(c, &buf) == 0)
 				{
 					n = esc(c, info);
@@ -110,29 +95,23 @@ void cep(shell_info_t *info)
 					break;
 				}
 			}
-
 			free(pd);
-
 			if (pt == NULL)
 			{
 				info->exit_code = 127;
 				ses(info);
 			}
 		}
-
 		if (p == NULL || pt[x] == NULL)
 		{
 			pce(info, ": not found\n");
 			info->exit_code = 127;
 		}
-
 		free(pt);
 	}
-
 	if (n == 1)
 		ses(info);
 }
-
 /**
  * ecd - Executes cmd in current directory
  * @info: Points of shell
@@ -149,10 +128,8 @@ int ecd(shell_info_t *info)
 		if (access(info->args[0], X_OK) == 0)
 		{
 			cp = fork();
-
 			if (cp == -1)
 				pce(info, NULL);
-
 			if (cp == 0)
 			{
 				if (execve(info->args[0], info->args, info->env_vars) == -1)
@@ -161,16 +138,13 @@ int ecd(shell_info_t *info)
 			else
 			{
 				wait(&info->exit_code);
-
 				if (WIFEXITED(info->exit_code))
 					info->exit_code = WEXITSTATUS(info->exit_code);
 				else if (WIFSIGNALED(info->exit_code) && WTERMSIG
 						(info->exit_code) == SIGINT)
 					info->exit_code = 130;
-
 				return (0);
 			}
-
 			info->exit_code = 127;
 			return (1);
 		}
@@ -179,16 +153,12 @@ int ecd(shell_info_t *info)
 			pce(info, ": permission denied\n");
 			info->exit_code = 126;
 		}
-
 		return (0);
 	}
-
 	pce(info, ": not found\n");
 	info->exit_code = 127;
-
 	return (0);
 }
-
 /**
  * cde - Checks if cmd is part of path
  * @p: cmd
@@ -207,9 +177,7 @@ int cde(char *p)
 		{
 			return (1);
 		}
-
 		x++;
 	}
-
 	return (0);
 }
