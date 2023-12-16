@@ -42,12 +42,12 @@ int esc(char *cmd, shell_info_t *info)
 		cp = fork();
 
 		if (cp == -1)
-			print_custom_error(info, NULL);
+			pce(info, NULL);
 
 		if (cp == 0)
 		{
 			if (execve(cmd, info->args, info->env_vars) == -1)
-				print_custom_error(info, NULL);
+				pce(info, NULL);
 		}
 		else
 		{
@@ -66,7 +66,7 @@ int esc(char *cmd, shell_info_t *info)
 	}
 	else
 	{
-		print_custom_error(info, ": permission denied\n");
+		pce(info, ": permission denied\n");
 		info->exit_code = 126;
 	}
 
@@ -86,7 +86,7 @@ void cep(shell_info_t *info)
 	char **pt;
 	struct stat buf;
 
-	if (cd(info->args[0]))
+	if (cde(info->args[0]))
 		n = ecd(info);
 
 	else
@@ -95,12 +95,12 @@ void cep(shell_info_t *info)
 
 		if (p != NULL)
 		{
-			pd = dup_custom_string(p + 5);
-			pt = tcmd(pd, ":");
+			pd = dup_custom_str(p + 5);
+			pt = tokenize_command(pd, ":");
 
 			for (x = 0; pt && pt[x]; x++, free(c))
 			{
-				c = cat_custom_strings(pt[x], info->args[0]);
+				c = cat_custom_str(pt[x], info->args[0]);
 
 				if (stat(c, &buf) == 0)
 				{
@@ -115,13 +115,13 @@ void cep(shell_info_t *info)
 			if (pt == NULL)
 			{
 				info->exit_code = 127;
-				exs(info);
+				ses(info);
 			}
 		}
 
 		if (p == NULL || pt[x] == NULL)
 		{
-			print_custom_error(info, ": not found\n");
+			pce(info, ": not found\n");
 			info->exit_code = 127;
 		}
 
@@ -129,7 +129,7 @@ void cep(shell_info_t *info)
 	}
 
 	if (n == 1)
-		exs(info);
+		ses(info);
 }
 
 /**
@@ -150,12 +150,12 @@ int ecd(shell_info_t *info)
 			cp = fork();
 
 			if (cp == -1)
-				print_custom_error(info, NULL);
+				pce(info, NULL);
 
 			if (cp == 0)
 			{
 				if (execve(info->args[0], info->args, info->env_vars) == -1)
-					print_custom_error(info, NULL);
+					pce(info, NULL);
 			}
 			else
 			{
@@ -174,14 +174,14 @@ int ecd(shell_info_t *info)
 		}
 		else
 		{
-			print_custom_error(info, ": permission denied\n");
+			pce(info, ": permission denied\n");
 			info->exit_code = 126;
 		}
 
 		return (0);
 	}
 
-	print_custom_error(info, ": not found\n");
+	pce(info, ": not found\n");
 	info->exit_code = 127;
 
 	return (0);

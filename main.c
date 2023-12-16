@@ -10,9 +10,9 @@ static void sh(int uv)
 	(void)uv;
 
 	if (sf == 0)
-		pcs("\n$ ");
+		print_custom_str("\n$ ");
 	else
-		pcs("\n");
+		print_custom_str("\n");
 }
 
 /**
@@ -36,39 +36,39 @@ int main(int ac __attribute__((unused)), char **av, char **env)
 		ip = 1;
 
 	if (ip == 0)
-		pcs("$ ");
+		print_custom_str("$ ");
 
-	while (getline(&(info.cmd_buffer), &bl, stdin) != -1)
+	while (getline(&(info.cmd_buf), &bl, stdin) != -1)
 	{
-		info.cc++;
-		info.cl = tc(info.cmd_buffer, ";");
+		info.cmd_count++;
+		info.cmd_list = tokenize_command(info.cmd_buf, ";");
 
-		for (i = 0; info.cl && info.cl[i] != NULL; i++)
+		for (i = 0; info.cmd_list && info.cmd_list[i] != NULL; i++)
 		{
-			info.args = tc(info.cl[i], "\n \t\r");
+			info.args = tokenize_command(info.cmd_list[i], "\n \t\r");
 
 			if (info.args && info.args[0])
 			{
-				if (isb(&info) == NULL)
+				if (sib(&info) == NULL)
 					cep(&info);
 			}
 
 			free(info.args);
 		}
 
-		free(info.cmd_buffer);
-		free(info.cl);
+		free(info.cmd_buf);
+		free(info.cmd_list);
 
 		if (ip == 0)
-			pcs("$ ");
+			print_custom_str("$ ");
 
-		info.cmd_buffer = NULL;
+		info.cmd_buf = NULL;
 	}
 
 	if (ip == 0)
-		pcs("\n");
+		print_custom_str("\n");
 
 	dse(info.env_vars);
-	free(info.cmd_buffer);
-	ex(info.ec);
+	free(info.cmd_buf);
+	exit(info.exit_code);
 }

@@ -16,16 +16,15 @@ void (*sib(shell_info_t *info))(shell_info_t *info)
 		{NULL, NULL}
 	};
 
-	for (i = 0; sb[i].bf != NULL; i++)
+	for (i = 0; sb[i].func != NULL; i++)
 	{
-		if (ccs(info->args[0], sb[i].bn) == 0)
+		if (compare_custom_str(info->args[0], sb[i].name) == 0)
 			break;
 	}
 
-	if (sb[i].bf != NULL)
-		sb[i].bf(info);
-
-	(return) sb[i].bf;
+	if (sb[i].func != NULL)
+		sb[i].func(info);
+	return (sb[i].func);
 }
 
 /**
@@ -36,27 +35,27 @@ void ses(shell_info_t *info)
 {
 	int s;
 
-	if (ccs(info->args[0], "exit") == 0 && info->args[1] != NULL)
+	if (compare_custom_str(info->args[0], "exit") == 0 && info->args[1] != NULL)
 	{
-		s = cstoi(info->args[1]);
+		s = csti(info->args[1]);
 		if (s == -1)
 		{
-			info->ec = 2;
+			info->exit_code = 2;
 			pce(info, ": Illegal number: ");
-			pcm(info->args[1]);
-			pcm("\n");
-			free(info->cl);
-			info->cl = NULL;
+			pecm(info->args[1]);
+			pecm("\n");
+			free(info->cmd_list);
+			info->cmd_list = NULL;
 			return;
 		}
-		info->ec = s;
+		info->exit_code = s;
 	}
 
-	free(info->cb);
+	free(info->cmd_buf);
 	free(info->args);
-	free(info->cl);
-	dse(info->ev);
-	ex(info->ec);
+	free(info->cmd_list);
+	dse(info->env_vars);
+	exit(info->exit_code);
 }
 
 /**
@@ -65,13 +64,16 @@ void ses(shell_info_t *info)
  */
 void ssse(shell_info_t *info)
 {
-	for (unsigned int i = 0; info->ev[i] != NULL; i++)
+	unsigned int i = 0;
+
+	while (info->env_vars[i])
 	{
-		pcs(info->ev[i]);
-		pcs("\n");
+		print_custom_str(info->env_vars[i]);
+		print_custom_str("\n");
+		i++;
 	}
 
-	info->ec = 0;
+	info->exit_code = 0;
 }
 
 /**
@@ -86,11 +88,11 @@ void sssev(shell_info_t *info)
 	if (info->args[1] == NULL || info->args[2] == NULL)
 	{
 		pce(info, ": Incorrect number of args\n");
-		info->ec = 2;
+		info->exit_code = 2;
 		return;
 	}
 
-	k = fck(info->ev, info->args[1]);
+	k = fck(info->env_vars, info->args[1]);
 
 	if (k == NULL)
 	{
@@ -102,18 +104,18 @@ void sssev(shell_info_t *info)
 		if (v == NULL)
 		{
 			pce(info, NULL);
-			free(info->cb);
-			free(info->cl);
+			free(info->cmd_buf);
+			free(info->cmd_list);
 			free(info->args);
-			dse(info->ev);
-			ex(127);
+			dse(info->env_vars);
+			exit(127);
 		}
 
 		free(*k);
 		*k = v;
 	}
 
-	info->ec = 0;
+	info->exit_code = 0;
 }
 
 /**
@@ -124,14 +126,16 @@ void ssseu(shell_info_t *info)
 {
 	char **k, **ne;
 
+	unsigned int x, y;
+
 	if (info->args[1] == NULL)
 	{
 		pce(info, ": Incorrect number of args\n");
-		info->ec = 2;
+		info->exit_code = 2;
 		return;
 	}
 
-	k = fck(info->ev, info->args[1]);
+	k = fck(info->env_vars, info->args[1]);
 
 	if (k == NULL)
 	{
@@ -139,9 +143,7 @@ void ssseu(shell_info_t *info)
 		return;
 	}
 
-	unsigned int x, y;
-
-	for (x = 0; info->ev[x] != NULL; x++)
+	for (x = 0; info->env_vars[x] != NULL; x++)
 		;
 
 	ne = malloc(sizeof(char *) * x);
@@ -149,20 +151,20 @@ void ssseu(shell_info_t *info)
 	if (ne == NULL)
 	{
 		pce(info, NULL);
-		info->ec = 127;
+		info->exit_code = 127;
 		ses(info);
 	}
 
-	for (x = 0; info->ev[x] != *k; x++)
-		ne[x] = info->ev[x];
+	for (x = 0; info->env_vars[x] != *k; x++)
+		ne[x] = info->env_vars[x];
 
-	for (y = x + 1; info->ev[y] != NULL; y++, x++)
-		ne[x] = info->ev[y];
+	for (y = x + 1; info->env_vars[y] != NULL; y++, x++)
+		ne[x] = info->env_vars[y];
 
 	ne[x] = NULL;
 
 	free(*k);
-	free(info->ev);
-	info->ev = ne;
-	info->ec = 0;
+	free(info->env_vars);
+	info->env_vars = ne;
+	info->exit_code = 0;
 }

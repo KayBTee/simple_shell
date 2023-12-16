@@ -11,7 +11,7 @@ void ack(shell_info_t *info)
 	unsigned int i;
 	char **ne;
 
-	for (i = 0; info->ev[i] != NULL; i++)
+	for (i = 0; info->env_vars[i] != NULL; i++)
 		;
 
 	ne = malloc(sizeof(char *) * (i + 2));
@@ -19,30 +19,30 @@ void ack(shell_info_t *info)
 	if (ne == NULL)
 	{
 		pce(info, NULL);
-		info->ec = 127;
+		info->exit_code = 127;
 		ses(info);
 	}
 
-	for (i = 0; info->ev[i] != NULL; i++)
-		ne[i] = info->ev[i];
+	for (i = 0; info->env_vars[i] != NULL; i++)
+		ne[i] = info->env_vars[i];
 
 	ne[i] = acv(info->args[1], info->args[2]);
 
 	if (ne[i] == NULL)
 	{
 		pce(info, NULL);
-		free(info->cb);
-		free(info->cl);
+		free(info->cmd_buf);
+		free(info->cmd_list);
 		free(info->args);
-		dse(info->ev);
+		dse(info->env_vars);
 		free(ne);
-		ex(127);
+		exit(127);
 	}
 
 	ne[i + 1] = NULL;
 
-	free(info->ev);
-	info->ev = ne;
+	free(info->env_vars);
+	info->env_vars = ne;
 }
 
 /**
@@ -56,7 +56,7 @@ char **fck(char **ev, char *k)
 {
 	unsigned int x, y, len;
 
-	len = csl(k);
+	len = custom_str_len(k);
 
 	for (x = 0; ev[x] != NULL; x++)
 	{
@@ -82,8 +82,8 @@ char *acv(char *k, char *v)
 	unsigned int len1, len2, x, y;
 	char *ne;
 
-	len1 = csl(k);
-	len2 = csl(v);
+	len1 = custom_str_len(k);
+	len2 = custom_str_len(v);
 
 	ne = malloc(sizeof(char) * (len1 + len2 + 2));
 

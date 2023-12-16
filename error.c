@@ -11,16 +11,16 @@ void pce(shell_info_t *info, char *msg)
 {
 	char *count;
 
-	pcs(info->init_args[0]);
-	pcs(": ");
+	print_custom_str(info->init_args[0]);
+	print_custom_str(": ");
 	count = itcs(info->cmd_count);
-	pcs(": ");
-	pcs(info->args[0]);
+	print_custom_str(": ");
+	print_custom_str(info->args[0]);
 
 	if (msg)
-		pcs(msg);
+		print_custom_str(msg);
 	else
-		pe("");
+		perror("");
 
 	free(count);
 }
@@ -35,13 +35,13 @@ void pecm(char *str)
 {
 	ssize_t n, len;
 
-	n = csl(str);
+	n = custom_str_len(str);
 	len = write(STDERR_FILENO, str, n);
 
 	if (len != n)
 	{
-		pe("Fatal Error");
-		ex(1);
+		perror("Fatal Error");
+		exit(1);
 	}
 }
 
@@ -65,8 +65,8 @@ char *itcs(unsigned int v)
 
 	if (ns == NULL)
 	{
-		pe("Fatal Error1");
-		ex(127);
+		perror("Fatal Error1");
+		exit(127);
 	}
 
 	ns[d] = '\0';
@@ -77,5 +77,5 @@ char *itcs(unsigned int v)
 		v /= 10;
 	}
 
-	(return) ns;
+	return (ns);
 }

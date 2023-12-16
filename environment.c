@@ -3,6 +3,7 @@
 /**
  * cse - creates shell environment
  * @ev: Environment passed to the main
+ * @dup_custom_str: duplicates string
  *
  * Return: pointer to new environment
  */
@@ -19,11 +20,11 @@ char **cse(char **ev)
 	if (n == NULL)
 	{
 		perror("Fatal Error");
-		ex(1);
+		exit(1);
 	}
 
 	for (x = 0; ev[x] != NULL; x++)
-		n[x] = dcs(ev[x]);
+		n[x] = dup_custom_str(ev[x]);
 
 	n[x] = NULL;
 

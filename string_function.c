@@ -16,9 +16,9 @@ ssize_t print_custom_str(char *str)
 	if (len != num)
 	{
 		perror("Fatal Error");
-		(return) -1;
+		return (-1);
 	}
-	(return) len;
+	return (len);
 }
 
 /**
@@ -33,7 +33,7 @@ char *dup_custom_str(char *str_to_dup)
 	int len, x;
 
 	if (str_to_dup == NULL)
-		(return) NULL;
+		return (NULL);
 
 	for (len = 0; str_to_dup[len]; len++)
 		;
@@ -42,7 +42,7 @@ char *dup_custom_str(char *str_to_dup)
 	for (x = 0; x <= len; x++)
 		copy[x] = str_to_dup[x];
 
-	(return) copy;
+	return (copy);
 }
 
 /**
@@ -59,10 +59,10 @@ int compare_custom_str(char *str1, char *str2)
 	while (str1[x] == str2[x])
 	{
 		if (str1[x] == '\0')
-			(return) 0;
+			return (0);
 		x++;
 	}
-	(return) str1[x] - str2[x];
+	return (str1[x] - str2[x]);
 }
 
 /**
@@ -83,7 +83,7 @@ char *cat_custom_str(char *str1, char *str2)
 	new_str = malloc(new_len * sizeof(char));
 
 	if (new_str == NULL)
-		(return) NULL;
+		return (NULL);
 
 	for (x = 0; x < len1; x++)
 		new_str[x] = str1[x];
@@ -94,7 +94,7 @@ char *cat_custom_str(char *str1, char *str2)
 		new_str[x + 1 + y] = str2[y];
 
 	new_str[len1 + len2 + 1] = '\0';
-	(return) new_str;
+	return (new_str);
 }
 
 /**
@@ -110,6 +110,6 @@ unsigned int custom_str_len(char *str)
 
 	for (len = 0; str[len]; len++)
 		;
-	(return) len;
+	return (len);
 }
 
