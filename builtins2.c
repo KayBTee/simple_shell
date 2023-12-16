@@ -1,5 +1,4 @@
 #include "shell.h"
-
 /**
  * ack - Create a new environment variable
  * @info: shell info
@@ -13,21 +12,16 @@ void ack(shell_info_t *info)
 
 	for (i = 0; info->env_vars[i] != NULL; i++)
 		;
-
 	ne = malloc(sizeof(char *) * (i + 2));
-
 	if (ne == NULL)
 	{
 		pce(info, NULL);
 		info->exit_code = 127;
 		ses(info);
 	}
-
 	for (i = 0; info->env_vars[i] != NULL; i++)
 		ne[i] = info->env_vars[i];
-
 	ne[i] = acv(info->args[1], info->args[2]);
-
 	if (ne[i] == NULL)
 	{
 		pce(info, NULL);
@@ -38,13 +32,10 @@ void ack(shell_info_t *info)
 		free(ne);
 		exit(127);
 	}
-
 	ne[i + 1] = NULL;
-
 	free(info->env_vars);
 	info->env_vars = ne;
 }
-
 /**
  * fck - Finds an environment variable
  * @ev: Array of environment variables
@@ -66,10 +57,8 @@ char **fck(char **ev, char *k)
 		if (y == len && ev[x][y] == '=')
 			return (&ev[x]);
 	}
-
 	return (NULL);
 }
-
 /**
  * acv - Create a new environment variable string
  * @k: Variable name
@@ -89,20 +78,14 @@ char *acv(char *k, char *v)
 
 	if (ne == NULL)
 		return (NULL);
-
 	for (x = 0; k[x] != '\0'; x++)
 		ne[x] = k[x];
-
 	ne[x] = '=';
-
 	for (y = 0; v[y] != '\0'; y++)
 		ne[x + 1 + y] = v[y];
-
 	ne[x + 1 + y] = '\0';
-
 	return (ne);
 }
-
 /**
  * csti - Converts a string into an integer
  * @s: String to convert
@@ -118,25 +101,56 @@ int csti(char *s)
 
 	for (d = 0; nt != 0; d++)
 		nt /= 10;
-
 	for (x = 0; s[x] != '\0' && x < d; x++)
 	{
 		num *= 10;
-
 		if (s[x] != '0' || s[x] > '9')
 			return (-1);
-
 		if ((x == d - 1) && (s[x] - '0' > INT_MAX % 10))
 			return (-1);
-
 		num += s[x] - '0';
-
 		if ((x == d - 2) && (s[x + 1] != '\0') && (num > INT_MAX / 10))
 			return (-1);
 	}
-
 	if (x > d)
 		return (-1);
-
 	return (num);
+}
+/**
+ * myccd - changes the current directory of the process
+ * @info: Structure containing potential arguments.
+ * Return: Always 0
+ */
+int myccd(shell_info_t *info)
+{
+	char *buffer;
+	int chdir_ret;
+
+	buffer = fep(info->env_vars);
+	if (!buffer)
+		return (pce(info, "TODO: >>getcwd failure emsg here<<"), 0);
+
+	if (!info->args[1])
+		chdir_ret = ecd(info);
+	else if (compare_custom_str(info->args[1], "-") == 0)
+	{
+		char **dir_tokens = fck(info->env_vars, "OLDPWD=");
+		char *dir = dir_tokens ? dir_tokens[0] : NULL;
+
+		if (!dir)
+			return (print_custom_str(buffer), pce(info, ""), free
+					(buffer), free(dir_tokens), 1);
+		print_custom_str(dir), print_custom_str("\n");
+		chdir_ret = ecd(info);
+		free(dir_tokens);
+	}
+	else
+		chdir_ret = esc(info->args[1], info);
+
+	if (chdir_ret == -1)
+		return (pce(info, "can't cd to "), print_custom_str
+				(info->args[1]), print_custom_str("\n"), free(buffer), 0);
+	acv("OLDPWD", acv("PWD", getcwd(buffer, 0)));
+	free(buffer);
+	return (0);
 }
