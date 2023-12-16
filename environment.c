@@ -3,7 +3,6 @@
 /**
  * cse - creates shell environment
  * @ev: Environment passed to the main
- * @dup_custom_str: duplicates string
  *
  * Return: pointer to new environment
  */

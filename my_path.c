@@ -55,7 +55,8 @@ int esc(char *cmd, shell_info_t *info)
 
 			if (WIFEXITED(info->exit_code))
 				info->exit_code = WEXITSTATUS(info->exit_code);
-			else if (WIFSIGNALED(info->exit_code) && WTERMSIG(info->exit_code) == SIGINT)
+			else if (WIFSIGNALED(info->exit_code) && WTERMSIG
+					(info->exit_code) == SIGINT)
 				info->exit_code = 130;
 
 			return (0);
@@ -163,7 +164,8 @@ int ecd(shell_info_t *info)
 
 				if (WIFEXITED(info->exit_code))
 					info->exit_code = WEXITSTATUS(info->exit_code);
-				else if (WIFSIGNALED(info->exit_code) && WTERMSIG(info->exit_code) == SIGINT)
+				else if (WIFSIGNALED(info->exit_code) && WTERMSIG
+						(info->exit_code) == SIGINT)
 					info->exit_code = 130;
 
 				return (0);
