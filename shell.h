@@ -71,5 +71,7 @@ void pce(shell_info_t *info, char *msg);
 void pecm(char *str);
 char *itcs(unsigned int v);
 int myccd(shell_info_t *info);
+int execute_command(shell_info_t *info, char *cmd);
+void execute_commands(shell_info_t *info);
 
 #endif /* SHELL_H */
