@@ -31,16 +31,20 @@ char *fep(char **ev)
  */
 int esc(char *cmd, shell_info_t *info)
 {
-	pid_t cp;
+	char *path_cmd = fep(info->env_vars);
+	char *full_cmd = cat_custom_str(path_cmd, cmd);
 
-	if (access(cmd, X_OK) == 0)
+	free(path_cmd);
+
+	if (access(full_cmd, X_OK) == 0)
 	{
-		cp = fork();
+		pid_t cp = fork();
+
 		if (cp == -1)
 			pce(info, NULL);
 		if (cp == 0)
 		{
-			if (execve(cmd, info->args, info->env_vars) == -1)
+			if (execve(full_cmd, info->args, info->env_vars) == -1)
 				pce(info, NULL);
 		}
 		else
@@ -51,9 +55,11 @@ int esc(char *cmd, shell_info_t *info)
 			else if (WIFSIGNALED(info->exit_code) && WTERMSIG
 					(info->exit_code) == SIGINT)
 				info->exit_code = 130;
+			free(full_cmd);
 			return (0);
 		}
 		info->exit_code = 127;
+		free(full_cmd);
 		return (1);
 	}
 	else
@@ -61,6 +67,7 @@ int esc(char *cmd, shell_info_t *info)
 		pce(info, ": permission denied\n");
 		info->exit_code = 126;
 	}
+	free(full_cmd);
 	return (0);
 }
 /**

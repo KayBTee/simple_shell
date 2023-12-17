@@ -11,6 +11,10 @@
 #include <limits.h>
 #include <signal.h>
 
+#define MAX_INPUT_SIZE 1024
+#define MAX_ARG_SIZE 64
+#define MAX_PATH_SIZE 1024
+
 /**
  *struct shell_info - struct for shell info
  * @args: command line args
@@ -71,7 +75,5 @@ void pce(shell_info_t *info, char *msg);
 void pecm(char *str);
 char *itcs(unsigned int v);
 int myccd(shell_info_t *info);
-int execute_command(shell_info_t *info, char *cmd);
-void execute_commands(shell_info_t *info);
 
 #endif /* SHELL_H */
