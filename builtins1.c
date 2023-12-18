@@ -47,6 +47,17 @@ void ses(shell_info_t *info)
 		}
 		info->exit_code = s;
 	}
+	else if (info->args[1] != NULL)
+	{
+		info->exit_code = csti(info->args[1]);
+		if (info->exit_code == -1)
+		{
+			pce(info, ": Illegal number: ");
+			pecm(info->args[1]);
+			pecm("\n");
+			info->exit_code = 2;
+		}
+	}
 	free(info->cmd_buf);
 	free(info->args);
 	free(info->cmd_list);
