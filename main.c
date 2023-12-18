@@ -84,18 +84,21 @@ list_t *node_starts_with(list_t *node, char *prefix, char c)
  * starts_with - check if a string starts with a specified prefix
  * @str: the string to check
  * @prefix: the prefix to check for
- * Return: a pointer to the beginning of the prefix in str if found, NULL otherwise
+ * Return: a pointer to the beginning of the
+ * prefix in str if found, NULL otherwise
  */
 char *starts_with(const char *str, const char *prefix)
 {
-    size_t prefix_len = strlen(prefix);
-    size_t str_len = strlen(str);
+	size_t prefix_len = strlen(prefix);
+	size_t str_len = strlen(str);
 
-    if (str_len < prefix_len) {
-        return (NULL);
-    }
-    if (strncmp(str, prefix, prefix_len) == 0) {
-        return (char *)str;
-    }
-    return (NULL);
+	if (str_len < prefix_len)
+	{
+		return (NULL);
+	}
+	if (strncmp(str, prefix, prefix_len) == 0)
+	{
+		return ((char *)str);
+	}
+	return (NULL);
 }
