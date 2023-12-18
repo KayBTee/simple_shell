@@ -15,6 +15,49 @@
 #define MAX_ARG_SIZE 64
 #define MAX_PATH_SIZE 1024
 
+/* for command chaining */
+#define CMD_NORM	0
+#define CMD_OR		1
+#define CMD_AND		2
+#define CMD_CHAIN	3
+
+/**
+ * struct liststr - singly linked list
+ * @num: the number field
+ * @str: a string
+ * @next: points to the next node
+ */
+typedef struct liststr
+{
+    int num;
+    char *str;
+    struct liststr *next;
+} list_t;
+/**
+ * struct passinfo - contains pseudo-arguments to pass into a function,
+ * allowing a uniform prototype for the function pointer struct
+ */
+typedef struct passinfo
+{
+    char *arg;
+    char **argv;
+    char *path;
+    int argc;
+    unsigned int line_count;
+    int err_num;
+    int linecount_flag;
+    char *fname;
+    list_t *env;
+    list_t *history;
+    list_t *alias;
+    char **environ;
+    int env_changed;
+    int status;
+    char **cmd_buf; /* pointer to cmd ; chain buffer, for memory mangement */
+    int cmd_buf_type; /* CMD_type ||, &&, ; */
+    int readfd;
+    int histcount;
+} info_t;
 /**
  *struct shell_info - struct for shell info
  * @args: command line args
@@ -75,5 +118,20 @@ void pce(shell_info_t *info, char *msg);
 void pecm(char *str);
 char *itcs(unsigned int v);
 int myccd(shell_info_t *info);
+void set_info(info_t *info, char **);
+void free_info(info_t *info, int);
+ssize_t get_input(info_t *info);
+void sigintHandler(int);
+int build_history_list(info_t *info, char *buf, int linecount);
+int write_history(info_t *info);
+int read_history(info_t *info);
+int renumber_history(info_t *info);
+int replace_string(char **old, char *new);
+int replace_alias(info_t *info);
+int replace_vars(info_t *info);
+int is_chain(info_t *info, char *buf, size_t *p);
+void check_chain(info_t *info, char *buf, size_t *p, size_t i, size_t len);
+list_t *node_starts_with(list_t *list, char *prefix, char delimiter);
+char *starts_with(const char *str, const char *prefix);
 
 #endif /* SHELL_H */
